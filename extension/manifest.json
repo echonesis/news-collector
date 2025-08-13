@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "News Collector Manager",
+  "version": "1.0.0",
+  "description": "管理新聞收集器的訂閱與設定",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "http://localhost:8000/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "News Collector"
+  },
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "icons": {
+    "48": "icons/icon.svg"
+  }
+}

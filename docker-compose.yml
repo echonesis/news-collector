@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  news-collector-api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///news_collector.db
+      - SECRET_KEY=production-secret-key
+    volumes:
+      - ./backend:/app
+      - news_data:/app/instance
+    restart: unless-stopped
+
+volumes:
+  news_data:
