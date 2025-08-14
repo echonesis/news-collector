@@ -1,0 +1,56 @@
+FROM python:3.11-slim
+
+WORKDIR /ap# 複製啟動腳本並設置權限
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# 不指定固定端口，讓 Render 決定
+# EXPOSE $PORT
+
+# 設置應用程式目錄
+WORKDIR /app
+
+# 健康檢查
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 
+  CMD curl -f http://localhost:${PORT:-10000}/api/health || exit 1
+
+# 運行應用程式
+CMD ["./start.sh"]依賴
+RUN apt-get update && apt-get install -y \
+    gcc \
+    pkg-config \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 升級 pip
+RUN pip install --upgrade pip
+
+# 複製需求檔案並安裝 Python 依賴
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 複製應用程式碼
+COPY . .
+
+# 建立資料目錄
+RUN mkdir -p instance
+
+# 設置環境變數
+ENV PYTHONPATH=/app
+ENV EMAIL_MODE=real
+ENV DEBUG=False
+ENV PYTHONUNBUFFERED=1
+
+# 複製並設置啟動腳本
+COPY start.sh .
+RUN chmod +x start.sh
+
+# 健康檢查 - 使用動態端口
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-10000}/api/health || exit 1
+
+# 不指定固定端口，讓 Render 決定
+# EXPOSE $PORT
+
+# 使用啟動腳本
+CMD ["./start.sh"]
