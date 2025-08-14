@@ -5,7 +5,12 @@ WORKDIR /app
 # 安裝系統依賴
 RUN apt-get update && apt-get install -y \
     gcc \
+    pkg-config \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# 升級 pip
+RUN pip install --upgrade pip
 
 # 複製需求檔案並安裝 Python 依賴
 COPY requirements.txt .
