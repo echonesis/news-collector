@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: news-collector-api
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: EMAIL_MODE
+        value: real
+      - key: DEBUG
+        value: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PORT
+        value: 8000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: news-collector-db
+          property: connectionString
+    
+  - type: pserv
+    name: news-collector-db
+    env: postgres
+    region: singapore
+    plan: free
+    ipAllowList: []
+    databaseName: news_collector
+    databaseUser: news_user

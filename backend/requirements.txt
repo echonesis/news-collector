@@ -7,3 +7,5 @@ beautifulsoup4==4.12.2
 feedparser==6.0.10
 python-dotenv==1.0.0
 smtplib2==0.2.1
+gunicorn==21.2.0
+psycopg2-binary==2.9.7

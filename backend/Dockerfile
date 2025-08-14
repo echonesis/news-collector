@@ -17,6 +17,12 @@ COPY . .
 # 建立資料目錄
 RUN mkdir -p instance
 
+# 設置環境變數
+ENV PYTHONPATH=/app
+ENV EMAIL_MODE=real
+ENV DEBUG=False
+
 EXPOSE 8000
 
-CMD ["python", "main.py"]
+# 使用 Gunicorn 作為生產環境 WSGI 服務器
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120", "main:app"]
