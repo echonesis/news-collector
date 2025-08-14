@@ -12,12 +12,16 @@
   ],
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "News Collector"
+    "default_title": "News Collector - 快遞狗新聞服務",
+    "default_icon": "icons/icon-48.png"
   },
   "background": {
     "service_worker": "background/background.js"
   },
   "icons": {
-    "48": "icons/icon.svg"
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
   }
 }
