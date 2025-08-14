@@ -26,8 +26,13 @@ RUN mkdir -p instance
 ENV PYTHONPATH=/app
 ENV EMAIL_MODE=real
 ENV DEBUG=False
+ENV PYTHONUNBUFFERED=1
+
+# 健康檢查
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/api/health || exit 1
 
 EXPOSE 8000
 
 # 使用 Gunicorn 作為生產環境 WSGI 服務器
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120", "main:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120", "--preload", "main:app"]
