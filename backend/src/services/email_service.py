@@ -86,7 +86,7 @@ class EmailService:
                     <div class="news-summary">{item.get('summary', '')}</div>
                     <div class="news-meta">
                         來源: {item.get('source', '未知')} | 
-                        時間: {item.get('published_at', '').split('T')[0] if item.get('published_at') else '未知'}
+                        時間: {str(item.get('published_at', '')).split('T')[0] if item.get('published_at') else '未知'}
                     </div>
                 </div>
                 """

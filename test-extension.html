@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Collector Extension 測試</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #2c5aa0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #cce7ff;
+            border: 1px solid #99d1ff;
+            color: #004085;
+        }
+        .step {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗞️ News Collector Extension 測試頁面</h1>
+        
+        <div class="test-section">
+            <h3>📋 測試步驟</h3>
+            <div class="step">
+                <strong>步驟 1:</strong> 確認後端 API 連線狀態
+            </div>
+            <div class="step">
+                <strong>步驟 2:</strong> 安裝並載入 Chrome Extension
+            </div>
+            <div class="step">
+                <strong>步驟 3:</strong> 測試 Extension 功能
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔗 API 連線測試</h3>
+            <p>後端部署地址: <strong>https://news-collector-deiu.onrender.com</strong></p>
+            <button onclick="testAPIHealth()">測試 API 健康狀態</button>
+            <button onclick="testCreateSubscription()">測試建立訂閱</button>
+            <button onclick="testGetSubscriptions()">測試取得訂閱</button>
+            <div id="apiResult" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔌 Extension 安裝指南</h3>
+            <div class="step">
+                1. 開啟 Chrome 瀏覽器，進入 <code>chrome://extensions/</code>
+            </div>
+            <div class="step">
+                2. 啟用右上角的「開發人員模式」
+            </div>
+            <div class="step">
+                3. 點擊「載入未封裝項目」
+            </div>
+            <div class="step">
+                4. 選擇 <code>news-collector/extension</code> 資料夾
+            </div>
+            <div class="step">
+                5. Extension 應該會出現在工具列中
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>✅ Extension 功能測試</h3>
+            <div class="step">
+                1. 點擊工具列上的 News Collector 圖示
+            </div>
+            <div class="step">
+                2. 填寫訂閱表單：
+                <ul>
+                    <li>主題: AI 人工智慧</li>
+                    <li>頻率: daily</li>
+                    <li>Email: 您的郵箱地址</li>
+                </ul>
+            </div>
+            <div class="step">
+                3. 點擊「訂閱」按鈕
+            </div>
+            <div class="step">
+                4. 如果成功，應該會顯示「訂閱成功！」訊息
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🛠️ 故障排除</h3>
+            <div class="step">
+                <strong>如果 Extension 無法連接：</strong>
+                <ul>
+                    <li>檢查 Chrome 開發者工具 (F12) 的 Console 是否有錯誤</li>
+                    <li>確認網路連線正常</li>
+                    <li>檢查 CORS 設定</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://news-collector-deiu.onrender.com';
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('apiResult');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'block';
+        }
+
+        async function testAPIHealth() {
+            try {
+                showResult('測試中...', 'info');
+                const response = await fetch(`${API_BASE}/api/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(`✅ API 健康狀態正常\n時間: ${data.timestamp}\n訊息: ${data.message}`, 'success');
+                } else {
+                    showResult(`❌ API 健康檢查失敗: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ 連線失敗: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCreateSubscription() {
+            try {
+                showResult('測試中...', 'info');
+                const testData = {
+                    topic: 'AI 測試',
+                    email: 'test@example.com',
+                    frequency: 'daily'
+                };
+
+                const response = await fetch(`${API_BASE}/api/subscriptions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(`✅ 訂閱建立成功\n主題: ${data.subscription.topic}\nEmail: ${data.subscription.email}`, 'success');
+                } else {
+                    showResult(`❌ 建立訂閱失敗: ${data.error || response.status}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ 建立訂閱失敗: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGetSubscriptions() {
+            try {
+                showResult('測試中...', 'info');
+                const response = await fetch(`${API_BASE}/api/subscriptions`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const count = data.subscriptions.length;
+                    const subscriptions = data.subscriptions.map(sub => 
+                        `- ${sub.topic} (${sub.email}) - ${sub.frequency}`
+                    ).join('\n');
+                    
+                    showResult(`✅ 取得訂閱列表成功\n總數: ${count}\n訂閱:\n${subscriptions}`, 'success');
+                } else {
+                    showResult(`❌ 取得訂閱失敗: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ 取得訂閱失敗: ${error.message}`, 'error');
+            }
+        }
+
+        // 頁面載入時自動測試 API 健康狀態
+        window.addEventListener('load', () => {
+            setTimeout(testAPIHealth, 1000);
+        });
+    </script>
+</body>
+</html>

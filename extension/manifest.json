@@ -8,7 +8,7 @@
     "activeTab"
   ],
   "host_permissions": [
-    "http://localhost:8000/*"
+    "https://news-collector-deiu.onrender.com/*"
   ],
   "action": {
     "default_popup": "popup/popup.html",

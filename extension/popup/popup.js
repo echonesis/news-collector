@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
       await saveSettings(formData);
       
       // 發送到後端 API
-      const response = await fetch('http://localhost:8000/api/subscriptions', {
+      const response = await fetch('https://news-collector-deiu.onrender.com/api/subscriptions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
